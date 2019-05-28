@@ -1,7 +1,5 @@
 package com.easy.websocket;
 
-import org.springframework.stereotype.Component;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,8 +13,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * @creation date		2019年4月4日
  * @version					1.0
  */
-@Component
 public class WebSocketMonitor {
+
+    private static WebSocketMonitor instance;
+
+    private WebSocketMonitor() {}
+
+    public static synchronized WebSocketMonitor getInstance(){
+        if(instance == null) {
+            instance = new WebSocketMonitor();
+        }
+        return instance;
+    }
 
     private ConcurrentHashMap<String, StackTraceElement> monitorCenter = new ConcurrentHashMap<>();
 

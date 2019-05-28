@@ -21,22 +21,18 @@ import java.util.concurrent.ConcurrentHashMap;
  * @creation date		2019年3月18日
  * @version					1.0
  */
-@Component
 @ServerEndpoint("/webSocket/{SID}/{isKeepConnect}")
+@Component
 public class WebSocketServer {
   
   private ConcurrentHashMap<String, Socket> sockets = new ConcurrentHashMap<>();
-
-  public static WebSocketRegistry webSocketRegistry;
-
-  public static WebSocketMonitor webSocketMonitor;
 
   @OnOpen
   public void onOpen(@PathParam(value="SID") String sid,@PathParam(value = "isKeepConnect") boolean isKeepConnect, Session session){
     Socket socket = new Socket(sid,null,session,isKeepConnect,new Date());
     sockets.put(sid, socket);
     try {
-      webSocketRegistry.registryClient(sid);
+      WebSocketRegistry.getInstance().registryClient(sid);
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -45,7 +41,7 @@ public class WebSocketServer {
   //收到消息时执行
   @OnMessage
   public void onMessage(String message, Session session) throws IOException {
-    webSocketMonitor.monitoredMessage(this.getSocketUUID8SessionId(session));
+    WebSocketMonitor.getInstance().monitoredMessage(this.getSocketUUID8SessionId(session));
   }
 
   /**

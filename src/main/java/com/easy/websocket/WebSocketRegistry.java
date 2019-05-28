@@ -1,8 +1,5 @@
 package com.easy.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,13 +13,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @creation date		2019年4月4日
  * @version					1.0
  */
-@Component
 public class WebSocketRegistry {
 
-    private ConcurrentHashMap<String, Map<String,Object>> registryCenter = new ConcurrentHashMap<>();
+    private static WebSocketRegistry instance;
 
-    @Autowired
-    private WebSocketMonitor webSocketMonitor;
+    private WebSocketRegistry() {}
+
+    public static synchronized WebSocketRegistry getInstance(){
+        if(instance == null) {
+            instance = new WebSocketRegistry();
+        }
+        return instance;
+    }
+
+    private ConcurrentHashMap<String, Map<String,Object>> registryCenter = new ConcurrentHashMap<>();
 
     /**
      * 服务器平台
@@ -112,7 +116,7 @@ public class WebSocketRegistry {
             }*/
             StackTraceElement ste = new StackTraceElement("GroupController","handleSocketMessage",null,0);
             registryCenter.get(socketUUID).put("monitorIsStart",true);
-            webSocketMonitor.addMonitorEvent(socketUUID,ste);
+            WebSocketMonitor.getInstance().addMonitorEvent(socketUUID,ste);
         }
     }
 
