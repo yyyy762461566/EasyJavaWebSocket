@@ -1,5 +1,9 @@
 package com.easy.websocket.util;
 
+import com.easy.websocket.SocketMessage;
+import com.easy.websocket.WebSocketServer;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * SendSocketMssgUtil.java
  * 
@@ -10,14 +14,25 @@ package com.easy.websocket.util;
  * @version					1.0
  */
 public class SendSocketMssgUtil {
-    
-  
-  
-  public void syncSendMessage() {
-    
+
+  @Autowired
+  private WebSocketServer webSocketServer;
+
+  /**
+   * 同步发送消息
+   * @param socketUUID 建立Socket连接时生成的UUID
+   * @param socketMessage 需发送的消息
+   */
+  public void syncSendMessage(String socketUUID,SocketMessage socketMessage) {
+    webSocketServer.sendMessage(socketUUID,socketMessage);
   }
-  
-  public void asyncSendMessage() {
+
+  /**
+   * 异步发送消息
+   * @param socketUUID 建立Socket连接时生成的UUID
+   * @param socketMessage 需发送的消息
+   */
+  public void asyncSendMessage(String socketUUID, SocketMessage socketMessage) {
     
   }
   

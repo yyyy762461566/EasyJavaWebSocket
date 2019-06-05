@@ -45,17 +45,17 @@ public class WebSocketRegistry {
      */
     public void registryClient(String socketUUID) throws Exception{
         this.registryBeforAction(socketUUID,this.CLIENT_PLATFORM);
-        this.whetherStartMonitor(socketUUID);
+        this.whetherStartMonitor(socketUUID,null);
     }
 
     /**
      * 注册服务端
      * @param socketUUID 建立Socket的连接时生成的UUID
-     * @return
+     * @param stackTraceElement 处理消息的对象
      */
-    public void registryServer(String socketUUID) throws Exception{
+    public void registryServer(String socketUUID, StackTraceElement stackTraceElement) throws Exception{
         this.registryBeforAction(socketUUID,this.SERVER_PLATFORM);
-        this.whetherStartMonitor(socketUUID);
+        this.whetherStartMonitor(socketUUID,stackTraceElement);
     }
 
     /**
@@ -102,21 +102,13 @@ public class WebSocketRegistry {
     /**
      * 验证Socket连接是否满足监控条件
      * @param socketUUID 建立Socket的连接时生成的UUID
+     * @param stackTraceElement 处理消息的对象
      */
-    private void whetherStartMonitor(String socketUUID){
+    private void whetherStartMonitor(String socketUUID, StackTraceElement stackTraceElement){
         Map<String, Object> registryInfo = registryCenter.get(socketUUID);
         if(Boolean.valueOf(registryInfo.get("clientIsRegistry").toString()) | Boolean.valueOf(registryInfo.get("serverIsRegistry").toString())){
-
-            /*StackTraceElement stack[] = (new Throwable()).getStackTrace();
-            for (StackTraceElement ste : stack ) {
-                System.out.println(ste.getClassName()+"."+ste.getMethodName()+"(...);");
-                System.out.println(ste.getMethodName());
-                System.out.println(ste.getFileName());
-                System.out.println(ste.getLineNumber());
-            }*/
-            StackTraceElement ste = new StackTraceElement("GroupController","handleSocketMessage",null,0);
             registryCenter.get(socketUUID).put("monitorIsStart",true);
-            WebSocketMonitor.getInstance().addMonitorEvent(socketUUID,ste);
+            WebSocketMonitor.getInstance().addMonitorEvent(socketUUID,stackTraceElement);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.easy.websocket;
 
+import com.sun.istack.internal.NotNull;
+
 /**
  * SocketMessage.java
  * 
@@ -10,23 +12,32 @@ package com.easy.websocket;
  * @version					1.0
  */
 public class SocketMessage {
-  
-  private Socket socket;
-  
+
+  /**
+   * 消息码
+   */
   private String code;
-  
+
+  /**
+   * 业务标识
+   */
   private String busnessFlag;
-  
+
+  /**
+   * 发送给客户端的消息类型
+   */
   private SocketMessageTypeEnum messageType;
-  
+
+  /**
+   * 发送给客户端的消息
+   */
   private Object message;
 
-  public Socket getSocket() {
-    return socket;
-  }
-
-  public void setSocket(Socket socket) {
-    this.socket = socket;
+  public SocketMessage(String messageCode, String busnessFlag, @NotNull SocketMessageTypeEnum messageType, @NotNull Object message){
+    this.code = messageCode;
+    this.busnessFlag = busnessFlag;
+    this.messageType = messageType;
+    this.message = message;
   }
 
   public String getCode() {

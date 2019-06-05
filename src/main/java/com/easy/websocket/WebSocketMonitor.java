@@ -2,6 +2,7 @@ package com.easy.websocket;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -26,37 +27,36 @@ public class WebSocketMonitor {
         return instance;
     }
 
-    private ConcurrentHashMap<String, StackTraceElement> monitorCenter = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, StackTraceElement> monitorCenter = new ConcurrentHashMap<>(16);
 
     /**
      * 添加监控事件
-     * @param socketUUID
+     * @param socketUUID 建立Socket连接时生成的UUID
      * @param ste 监听到消息后需执行的方法
      */
-    public void addMonitorEvent(String socketUUID,StackTraceElement ste){
-        StackTraceElement temp = new StackTraceElement("GroupController","aa",null,0);
+    public synchronized void addMonitorEvent(String socketUUID,StackTraceElement ste){
         monitorCenter.put(socketUUID,ste);
     }
 
     /**
      * 监听到Socket消息处理方法
      */
-    public void monitoredMessage(String socketUUID){
+    public synchronized void monitoredMessage(String socketUUID){
         StackTraceElement stackTraceElement = monitorCenter.get(socketUUID);
-        Class mclass = null;
-        Method method = null;
-        try {
-            mclass = ClassLoader.getSystemClassLoader().loadClass("com.tristore.helper.controller.GroupController"); // .forName("GroupController.class");
-            method = mclass.getMethod(stackTraceElement.getMethodName());
-            method.invoke(mclass,"测试");
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        if(Objects.nonNull(stackTraceElement.getClassName()) && Objects.nonNull(stackTraceElement.getMethodName())){
+            try {
+                Class mclass = ClassLoader.getSystemClassLoader().loadClass(stackTraceElement.getClassName());
+                Method method = mclass.getMethod(stackTraceElement.getMethodName());
+                method.invoke(mclass,null);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

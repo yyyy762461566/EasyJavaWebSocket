@@ -8,6 +8,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,23 +50,13 @@ public class WebSocketServer {
    * @param sid SocketUUID 
    * @param message 需要发送的消息
    */
-  public void sendMessage(String sid,String message) {
-    synchronized(this){
-      try {
-        sockets.get(sid).getSession().getBasicRemote().sendText(message);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+  public synchronized void sendMessage(String sid,SocketMessage message) {
+    try {
+      String messageFormat = MessageFormat.format("{MESSAGE_TYPE:'{0}',MESSAGE:'{1}'}", message.getMessageType(), message.getMessage());
+      sockets.get(sid).getSession().getBasicRemote().sendText(messageFormat);
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-  }
-  
-  /**
-   * 通过SocketUUID获取Socket业务bean
-   * @param socketUuid 标识Socket连接的UUID
-   * @return
-   */
-  public synchronized Socket getSocket(String socketUuid){
-    return sockets.get(socketUuid);
   }
 
   /**
