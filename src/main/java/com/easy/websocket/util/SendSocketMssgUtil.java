@@ -1,6 +1,6 @@
 package com.easy.websocket.util;
 
-import com.easy.websocket.SocketMessage;
+import com.easy.websocket.pojo.SocketMessage;
 import com.easy.websocket.WebSocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 

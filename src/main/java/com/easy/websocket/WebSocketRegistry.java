@@ -1,5 +1,7 @@
 package com.easy.websocket;
 
+import com.easy.websocket.pojo.HandleSocketMethod;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,11 +53,11 @@ public class WebSocketRegistry {
     /**
      * 注册服务端
      * @param socketUUID 建立Socket的连接时生成的UUID
-     * @param stackTraceElement 处理消息的对象
+     * @param handleSocketMethod 处理消息的对象
      */
-    public void registryServer(String socketUUID, StackTraceElement stackTraceElement) throws Exception{
+    public void registryServer(String socketUUID, HandleSocketMethod handleSocketMethod) throws Exception{
         this.registryBeforAction(socketUUID,this.SERVER_PLATFORM);
-        this.whetherStartMonitor(socketUUID,stackTraceElement);
+        this.whetherStartMonitor(socketUUID,handleSocketMethod);
     }
 
     /**
@@ -102,13 +104,13 @@ public class WebSocketRegistry {
     /**
      * 验证Socket连接是否满足监控条件
      * @param socketUUID 建立Socket的连接时生成的UUID
-     * @param stackTraceElement 处理消息的对象
+     * @param handleSocketMethod 处理消息的对象
      */
-    private void whetherStartMonitor(String socketUUID, StackTraceElement stackTraceElement){
+    private void whetherStartMonitor(String socketUUID, HandleSocketMethod handleSocketMethod){
         Map<String, Object> registryInfo = registryCenter.get(socketUUID);
         if(Boolean.valueOf(registryInfo.get("clientIsRegistry").toString()) | Boolean.valueOf(registryInfo.get("serverIsRegistry").toString())){
             registryCenter.get(socketUUID).put("monitorIsStart",true);
-            WebSocketMonitor.getInstance().addMonitorEvent(socketUUID,stackTraceElement);
+            WebSocketMonitor.getInstance().addMonitorEvent(socketUUID,handleSocketMethod);
         }
     }
 

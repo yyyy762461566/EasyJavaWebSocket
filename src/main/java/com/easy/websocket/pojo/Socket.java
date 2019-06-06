@@ -1,4 +1,4 @@
-package com.easy.websocket;
+package com.easy.websocket.pojo;
 
 import javax.websocket.Session;
 import java.util.Date;

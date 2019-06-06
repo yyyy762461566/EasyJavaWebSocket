@@ -1,8 +1,10 @@
 package com.easy.websocket;
 
-import java.lang.reflect.InvocationTargetException;
+import com.easy.websocket.pojo.HandleSocketMethod;
+import com.easy.websocket.util.SpringBeansUtil;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Method;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -27,36 +29,38 @@ public class WebSocketMonitor {
         return instance;
     }
 
-    private ConcurrentHashMap<String, StackTraceElement> monitorCenter = new ConcurrentHashMap<>(16);
+    private ConcurrentHashMap<String, HandleSocketMethod> monitorCenter = new ConcurrentHashMap<>(16);
 
     /**
      * 添加监控事件
      * @param socketUUID 建立Socket连接时生成的UUID
-     * @param ste 监听到消息后需执行的方法
+     * @param handleSocketMethod 监听到消息后需执行的方法
      */
-    public synchronized void addMonitorEvent(String socketUUID,StackTraceElement ste){
-        monitorCenter.put(socketUUID,ste);
+    public synchronized void addMonitorEvent(String socketUUID,HandleSocketMethod handleSocketMethod){
+        monitorCenter.put(socketUUID,handleSocketMethod);
     }
 
     /**
      * 监听到Socket消息处理方法
      */
     public synchronized void monitoredMessage(String socketUUID){
-        StackTraceElement stackTraceElement = monitorCenter.get(socketUUID);
-        if(Objects.nonNull(stackTraceElement.getClassName()) && Objects.nonNull(stackTraceElement.getMethodName())){
-            try {
-                Class mclass = ClassLoader.getSystemClassLoader().loadClass(stackTraceElement.getClassName());
-                Method method = mclass.getMethod(stackTraceElement.getMethodName());
-                method.invoke(mclass,null);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+        HandleSocketMethod handleSocketMethod = monitorCenter.get(socketUUID);
+        Method method = null;
+        try {
+            if(handleSocketMethod.isSpringManage()){
+                String classPath = handleSocketMethod.getDeclaringClass();
+                String beanName = classPath.substring(classPath.lastIndexOf(".")+1);
+                Object bean = SpringBeansUtil.getBean(beanName);
+                method = ReflectionUtils.findMethod(bean.getClass(),handleSocketMethod.getMethodName());
+                ReflectionUtils.invokeMethod(method,bean);
+            }else{
+                //ClassLoader.getSystemClassLoader().loadClass(handleSocketMethod.getDeclaringClass());
+                Class mclass = Class.forName(handleSocketMethod.getDeclaringClass());
+                method = ReflectionUtils.findMethod(mclass,handleSocketMethod.getMethodName());
+                ReflectionUtils.invokeMethod(method,mclass);
             }
+        }  catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

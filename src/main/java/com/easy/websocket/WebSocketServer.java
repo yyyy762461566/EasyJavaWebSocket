@@ -1,5 +1,7 @@
 package com.easy.websocket;
 
+import com.easy.websocket.pojo.Socket;
+import com.easy.websocket.pojo.SocketMessage;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnMessage;
@@ -50,7 +52,7 @@ public class WebSocketServer {
    * @param sid SocketUUID 
    * @param message 需要发送的消息
    */
-  public synchronized void sendMessage(String sid,SocketMessage message) {
+  public synchronized void sendMessage(String sid, SocketMessage message) {
     try {
       String messageFormat = MessageFormat.format("{MESSAGE_TYPE:'{0}',MESSAGE:'{1}'}", message.getMessageType(), message.getMessage());
       sockets.get(sid).getSession().getBasicRemote().sendText(messageFormat);

@@ -1,6 +1,8 @@
-package com.easy.websocket;
+package com.easy.websocket.pojo;
 
+import com.easy.websocket.SocketMessageTypeEnum;
 import com.sun.istack.internal.NotNull;
+import org.springframework.beans.factory.annotation.Required;
 
 /**
  * SocketMessage.java
