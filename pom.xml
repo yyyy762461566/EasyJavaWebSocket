@@ -59,7 +59,7 @@
           <version>3.8.0</version>
           <configuration>
             <compilerArguments>
-              <bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
+              <bootclasspath>${java.home}\lib\rt.jar${path.separator}${java.home}\lib\jce.jar</bootclasspath>
             </compilerArguments>
           </configuration>
         </plugin>
