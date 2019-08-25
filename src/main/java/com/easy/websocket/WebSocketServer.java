@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -41,9 +43,12 @@ public class WebSocketServer {
     }
   }
 
-  //收到消息时执行
   @OnMessage
   public void onMessage(String message, Session session) throws IOException {
+    Socket socket = sockets.get(this.getSocketUUID8SessionId(session));
+    if(Objects.nonNull(socket)){
+      socket.setLastActiveTime(new Date());
+    }
     WebSocketMonitor.getInstance().monitoredMessage(this.getSocketUUID8SessionId(session));
   }
 
@@ -52,8 +57,11 @@ public class WebSocketServer {
    * @param sid SocketUUID 
    * @param message 需要发送的消息
    */
-  public synchronized void sendMessage(String sid, SocketMessage message) {
+  public synchronized void sendMessage(String sid, SocketMessage message) throws VerifyError {
     try {
+      if(Objects.isNull(sockets.get(sid))){
+        throw new VerifyError(sid+":The connection has expired");
+      }
       String messageFormat = MessageFormat.format("{MESSAGE_TYPE:'{0}',MESSAGE:'{1}'}", message.getMessageType(), message.getMessage());
       sockets.get(sid).getSession().getBasicRemote().sendText(messageFormat);
     } catch (IOException e) {

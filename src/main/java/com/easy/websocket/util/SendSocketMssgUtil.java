@@ -23,7 +23,7 @@ public class SendSocketMssgUtil {
    * @param socketUUID 建立Socket连接时生成的UUID
    * @param socketMessage 需发送的消息
    */
-  public void syncSendMessage(String socketUUID,SocketMessage socketMessage) {
+  public void syncSendMessage(String socketUUID,SocketMessage socketMessage) throws VerifyError {
     webSocketServer.sendMessage(socketUUID,socketMessage);
   }
 
