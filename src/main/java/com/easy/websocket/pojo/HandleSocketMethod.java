@@ -15,7 +15,7 @@ public class HandleSocketMethod {
     private boolean springManage;
 
     public HandleSocketMethod(String declaringClass, String methodName, boolean springManage) throws ClassNotFoundException {
-        if(Objects.nonNull(Objects.requireNonNull(declaringClass,"Declaring class is null"))){
+        if (Objects.nonNull(Objects.requireNonNull(declaringClass, "Declaring class is null"))) {
             try {
                 Class.forName(declaringClass);
             } catch (ClassNotFoundException e) {
@@ -23,8 +23,8 @@ public class HandleSocketMethod {
             }
         }
         this.declaringClass = declaringClass;
-        this.methodName = Objects.requireNonNull(methodName,"Method name is null") ;
-        this.springManage = Objects.requireNonNull(springManage,"SpringManage name is null") ;
+        this.methodName = Objects.requireNonNull(methodName, "Method name is null");
+        this.springManage = Objects.requireNonNull(springManage, "SpringManage name is null");
     }
 
     public String getDeclaringClass() {

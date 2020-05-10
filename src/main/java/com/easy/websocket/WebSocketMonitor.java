@@ -9,21 +9,22 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * WebSocketMonitor.java
- * 
+ * <p>
  * comments:	WebSocket监听器
- * 
- * @author					YY
- * @creation date		2019年4月4日
- * @version					1.0
+ *
+ * @author YY
+ * @creation date        2019年4月4日
+ * @version 1.0
  */
 public class WebSocketMonitor {
 
     private static WebSocketMonitor instance;
 
-    private WebSocketMonitor() {}
+    private WebSocketMonitor() {
+    }
 
-    public static synchronized WebSocketMonitor getInstance(){
-        if(instance == null) {
+    public static synchronized WebSocketMonitor getInstance() {
+        if (instance == null) {
             instance = new WebSocketMonitor();
         }
         return instance;
@@ -33,40 +34,37 @@ public class WebSocketMonitor {
 
     /**
      * 添加监控事件
-     * @param socketUUID 建立Socket连接时生成的UUID
+     *
+     * @param socketUUID         建立Socket连接时生成的UUID
      * @param handleSocketMethod 监听到消息后需执行的方法
      */
-    public synchronized void addMonitorEvent(String socketUUID,HandleSocketMethod handleSocketMethod){
-        monitorCenter.put(socketUUID,handleSocketMethod);
+    public synchronized void addMonitorEvent(String socketUUID, HandleSocketMethod handleSocketMethod) {
+        monitorCenter.put(socketUUID, handleSocketMethod);
     }
 
     /**
      * 监听到Socket消息处理方法
      */
-    public synchronized void monitoredMessage(String socketUUID){
+    public synchronized void monitoredMessage(String socketUUID) {
         HandleSocketMethod handleSocketMethod = monitorCenter.get(socketUUID);
         Method method = null;
         try {
-            if(handleSocketMethod.isSpringManage()){
+            if (handleSocketMethod.isSpringManage()) {
                 String classPath = handleSocketMethod.getDeclaringClass();
-                String beanName = classPath.substring(classPath.lastIndexOf(".")+1);
+                String beanName = classPath.substring(classPath.lastIndexOf(".") + 1);
                 Object bean = SpringBeansUtil.getBean(beanName);
-                method = ReflectionUtils.findMethod(bean.getClass(),handleSocketMethod.getMethodName());
-                ReflectionUtils.invokeMethod(method,bean);
-            }else{
+                method = ReflectionUtils.findMethod(bean.getClass(), handleSocketMethod.getMethodName());
+                ReflectionUtils.invokeMethod(method, bean);
+            } else {
                 //ClassLoader.getSystemClassLoader().loadClass(handleSocketMethod.getDeclaringClass());
                 Class mclass = Class.forName(handleSocketMethod.getDeclaringClass());
-                method = ReflectionUtils.findMethod(mclass,handleSocketMethod.getMethodName());
-                ReflectionUtils.invokeMethod(method,mclass);
+                method = ReflectionUtils.findMethod(mclass, handleSocketMethod.getMethodName());
+                ReflectionUtils.invokeMethod(method, mclass);
             }
-        }  catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
 
 
 }

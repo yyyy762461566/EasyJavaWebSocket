@@ -5,75 +5,76 @@ import java.util.Date;
 
 /**
  * Socket.java
- * 
+ * <p>
  * comments:	WebSocket业务Bean
- * 
- * @author					YY
- * @creation date		2019年3月19日
- * @version					1.0
+ *
+ * @author YY
+ * @creation date        2019年3月19日
+ * @version 1.0
  */
 public class Socket {
-  
-  private String socketUuid;
-  
-  private String businessFlag;
 
-  private Session session;
-  
-  private boolean isKeepConnect;
-  
-  private Date lastActiveTime;
-  
-  public Socket() {}
-  
-  public Socket(String socketUuid, String businessFlag, Session session, boolean isKeepConnect, Date lastActiveTime) {
-    this.socketUuid = socketUuid;
-    this.businessFlag = businessFlag;
-    this.session = session;
-    this.isKeepConnect = isKeepConnect;
-    this.lastActiveTime = lastActiveTime;
-  }
-  
-  public String getSocketUuid() {
-    return socketUuid;
-  }
+    private String socketUuid;
 
-  public void setSocketUuid(String socketUuid) {
-    this.socketUuid = socketUuid;
-  }
-  
-  public String getBusinessFlag() {
-    return businessFlag;
-  }
+    private String businessFlag;
 
-  public void setBusinessFlag(String businessFlag) {
-    this.businessFlag = businessFlag;
-  }
+    private Session session;
 
-  public Session getSession() {
-    return session;
-  }
+    private boolean isKeepConnect;
 
-  public void setSession(Session session) {
-    this.session = session;
-  }
-  
-  public boolean isKeepConnect() {
-    return isKeepConnect;
-  }
+    private Date lastActiveTime;
 
-  public void setKeepConnect(boolean isKeepConnect) {
-    this.isKeepConnect = isKeepConnect;
-  }
+    public Socket() {
+    }
 
-  public Date getLastActiveTime() {
-    return lastActiveTime;
-  }
+    public Socket(String socketUuid, String businessFlag, Session session, boolean isKeepConnect, Date lastActiveTime) {
+        this.socketUuid = socketUuid;
+        this.businessFlag = businessFlag;
+        this.session = session;
+        this.isKeepConnect = isKeepConnect;
+        this.lastActiveTime = lastActiveTime;
+    }
 
-  public void setLastActiveTime(Date lastActiveTime) {
-    this.lastActiveTime = lastActiveTime;
-  }
-  
+    public String getSocketUuid() {
+        return socketUuid;
+    }
+
+    public void setSocketUuid(String socketUuid) {
+        this.socketUuid = socketUuid;
+    }
+
+    public String getBusinessFlag() {
+        return businessFlag;
+    }
+
+    public void setBusinessFlag(String businessFlag) {
+        this.businessFlag = businessFlag;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public boolean isKeepConnect() {
+        return isKeepConnect;
+    }
+
+    public void setKeepConnect(boolean isKeepConnect) {
+        this.isKeepConnect = isKeepConnect;
+    }
+
+    public Date getLastActiveTime() {
+        return lastActiveTime;
+    }
+
+    public void setLastActiveTime(Date lastActiveTime) {
+        this.lastActiveTime = lastActiveTime;
+    }
+
 
 }
 

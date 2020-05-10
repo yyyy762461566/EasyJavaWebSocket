@@ -14,7 +14,7 @@ import java.util.Objects;
  * @Version 1.0
  **/
 @Component
-public class  SpringBeansUtil implements ApplicationContextAware {
+public class SpringBeansUtil implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
@@ -23,21 +23,22 @@ public class  SpringBeansUtil implements ApplicationContextAware {
      * 覆盖ApplicationContextAware方法
      */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException{
-        if(Objects.isNull(SpringBeansUtil.applicationContext)){
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        if (Objects.isNull(SpringBeansUtil.applicationContext)) {
             SpringBeansUtil.applicationContext = applicationContext;
         }
     }
 
     /**
      * 获取applicationContext
+     *
      * @return applicationContext
      */
-    public static ApplicationContext getApplicationContext(){
+    public static ApplicationContext getApplicationContext() {
         return applicationContext;
     }
 
-    public static Object getBean(String name){
+    public static Object getBean(String name) {
         return getApplicationContext().getBean(lowerFistChar(name));
     }
 
@@ -45,7 +46,7 @@ public class  SpringBeansUtil implements ApplicationContextAware {
         return (T) getApplicationContext().getBean(lowerFistChar(var1), var2);
     }
 
-    private static String lowerFistChar(String str){
+    private static String lowerFistChar(String str) {
         char[] ch = str.toCharArray();
         if (ch[0] >= 'A' && ch[0] <= 'Z') {
             ch[0] = (char) (ch[0] + 32);
@@ -53,7 +54,7 @@ public class  SpringBeansUtil implements ApplicationContextAware {
         return String.valueOf(ch);
     }
 
-    private static String upperFistChar(String str){
+    private static String upperFistChar(String str) {
         char[] ch = str.toCharArray();
         if (ch[0] >= 'a' && ch[0] <= 'z') {
             ch[0] = (char) (ch[0] - 32);
